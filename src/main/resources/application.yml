@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: pll-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/library}
+    username: ${SPRING_DATASOURCE_USERNAME:library}
+    password: ${SPRING_DATASOURCE_PASSWORD:library}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Shanghai
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs
+
+# 业务规则参数（规则手册可通过 GET /api/rules 查看）
+app:
+  rules:
+    loan-period-days: 30          # 常规借阅周期
+    renew-limit: 1                # 每本书最多续借次数（公平性：防止长期占用热门书）
+    hold-pickup-days: 3           # 到馆后保留天数，超时释放给下一位
+    overdue-daily-fine: 0.50      # 逾期每日罚款（元）
+    overdue-cap-per-loan: 25.00   # 单笔借阅逾期罚款上限
+    damage-fine: 10.00            # 一般污损赔偿
+    severe-damage-fine: 30.00     # 缺页 / 附件遗失等严重污损赔偿
+    local-retain-ratio: 0.25      # 普通馆本地留存比例（防止跨馆抽空库存）
+    remote-retain-ratio: 0.50     # 远端分馆留存比例（更严格保护）
+    normal-sla-days: 2            # 普通馆间调拨时效（取书后天数）
+    remote-sla-days: 5            # 远端馆调拨时效
+    hot-hold-threshold: 5         # 排队人数达到该值视为热门书
+    block-outstanding-amount: 25.00  # 待缴罚款达到该金额暂停借阅/预约

@@ -1,0 +1,7 @@
+package com.citylibrary.pll.domain;
+
+public enum NoticeType {
+    READY_FOR_PICKUP, HOLD_EXPIRED, HOLD_CANCELLED,
+    DUE_REMINDER, OVERDUE, FINE_NOTICE, RETURN_CLAIM_RESULT, CLOSURE_NOTICE,
+    TRANSFER_ISSUE
+}
